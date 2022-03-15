@@ -10,18 +10,14 @@ const (
 	DBLastRowIdError
 	DBScanError
 
-	EmailAlreadyExists
-	UserNotFound
-	UserDontExist
-
 	SuccesfulCreation
 	SuccesfulLogin
-	UserFound
+	SuccesfulSearch
+	SuccesfulUpdate
+	SuccesfulDelete
+	NotFound
 	CreationFailure
 
-	InvalidEmailFormat
-	IncorrectPassword
-	RequestTimeOut
 	BadRequest
 	Unknown
 )
@@ -35,18 +31,14 @@ func (s Status) String() string {
 		"DBLastRowIdError",
 		"DBScanError",
 
-		"EmailAlreadyExists",
-		"UserNotFound",
-		"UserDontExist",
-
 		"SuccesfulCreation",
 		"SuccesfulLogin",
-		"UserFound",
+		"SuccesfulSearch",
+		"SuccesfulUpdate",
+		"SuccesfulDelete",
+		"NotFound",
 		"CreationFailure",
 
-		"InvalidEmailFormat",
-		"IncorrectPassword",
-		"RequestTimeOut",
 		"BadRequest",
 		"Unknown",
 	}[s]

@@ -2,6 +2,8 @@ package routes
 
 import (
 	"net/http"
+	"tinder_pets/internal/data/Infrastructure/petsRepository"
+	"tinder_pets/pkg/Use_cases/Handlers/petsHandler"
 
 	"github.com/go-chi/chi"
 )
@@ -10,9 +12,9 @@ import (
 func New() http.Handler {
 	r := chi.NewRouter()
 
-	ur := &UserRouter{
-		Handler: &userHandler.UserHandler{
-			Repository: &userRepository.UserRepository{},
+	ur := &PetsRouter{
+		Handler: &petsHandler.PetsHandler{
+			Repository: &petsRepository.PetsRepository{},
 		},
 	}
 
