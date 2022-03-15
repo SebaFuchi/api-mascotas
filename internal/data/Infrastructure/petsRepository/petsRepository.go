@@ -7,9 +7,9 @@ import (
 )
 
 type Repository interface {
-	CreatePet(p *pet.Pet, ownertoken string) response.Status
+	CreatePet(p *pet.Pet, ownerToken string) response.Status
 	GetPetsByOwnerToken(ownertoken string) ([]pet.Pet, response.Status)
-	GetPetByToken(token string) (pet.Pet, response.Status)
+	GetPetByToken(token string) (interface{}, response.Status)
 	UpdatePet(token string, p pet.Pet) response.Status
 	DeletePet(token string) response.Status
 }
@@ -17,7 +17,7 @@ type Repository interface {
 type PetsRepository struct {
 }
 
-func (pr *PetsRepository) CreatePet(p *pet.Pet, ownertoken string) response.Status {
+func (pr *PetsRepository) CreatePet(p *pet.Pet, ownerToken string) response.Status {
 	sqlCon, err := dbHelper.GetDB()
 	if err != nil {
 		return response.InternalServerError
@@ -92,23 +92,23 @@ func (pr *PetsRepository) GetPetsByOwnerToken(ownertoken string) ([]pet.Pet, res
 	return pets, response.SuccesfulSearch
 }
 
-func (pr *PetsRepository) GetPetByToken(token string) (pet.Pet, response.Status) {
+func (pr *PetsRepository) GetPetByToken(token string) (interface{}, response.Status) {
 	sqlCon, err := dbHelper.GetDB()
 	if err != nil {
-		return pet.Pet{}, response.InternalServerError
+		return nil, response.InternalServerError
 	}
 	defer sqlCon.Close()
 	var p pet.Pet
 
 	selForm, err := sqlCon.Prepare("SELECT token, owner_token, name, type, sex, image FROM pets WHERE token = ?")
 	if err != nil {
-		return p, response.DBQueryError
+		return nil, response.DBQueryError
 	}
 	defer selForm.Close()
 
 	result, err := selForm.Query(token)
 	if err != nil {
-		return p, response.DBQueryError
+		return nil, response.DBQueryError
 	}
 	defer result.Close()
 
@@ -122,12 +122,12 @@ func (pr *PetsRepository) GetPetByToken(token string) (pet.Pet, response.Status)
 			&p.Image,
 		)
 		if err != nil {
-			return p, response.DBScanError
+			return nil, response.DBScanError
 		}
 
 		return p, response.SuccesfulSearch
 	}
-	return p, response.NotFound
+	return nil, response.NotFound
 }
 
 func (pr *PetsRepository) UpdatePet(token string, p pet.Pet) response.Status {
@@ -147,7 +147,7 @@ func (pr *PetsRepository) UpdatePet(token string, p pet.Pet) response.Status {
 		p.Type,
 		p.Sex,
 		p.Image,
-		p.Token,
+		token,
 	)
 	if err != nil {
 		return response.DBExecutionError
