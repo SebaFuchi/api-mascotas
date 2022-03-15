@@ -24,6 +24,23 @@ func (pr *PetsRepository) CreatePet(p *pet.Pet, ownerToken string) response.Stat
 	}
 	defer sqlCon.Close()
 
+	selForm, err := sqlCon.Prepare("SELECT token FROM pets WHERE name = ?")
+	if err != nil {
+		return response.DBQueryError
+	}
+	defer selForm.Close()
+
+	res, err := selForm.Query(p.Name)
+	if err != nil {
+		return response.DBQueryError
+	}
+
+	defer res.Close()
+
+	if res.Next() {
+		return response.AlreadyExists
+	}
+
 	insForm, err := sqlCon.Prepare("INSERT INTO pets(token, owner_token, name, type, sex, image) VALUES (?,?,?,?,?,?)")
 	if err != nil {
 		return response.DBQueryError

@@ -17,6 +17,7 @@ const (
 	SuccesfulDelete
 	NotFound
 	CreationFailure
+	AlreadyExists
 
 	BadRequest
 	Unknown
@@ -38,6 +39,7 @@ func (s Status) String() string {
 		"SuccesfulDelete",
 		"NotFound",
 		"CreationFailure",
+		"AlreadyExists",
 
 		"BadRequest",
 		"Unknown",

@@ -13,19 +13,24 @@ type PetsHandler struct {
 }
 
 type Handler interface {
-	CreatePet(p *pet.Pet, ownerToken string) response.Status
+	CreatePet(p *pet.Pet, ownerToken string) (interface{}, response.Status)
 	GetPetsByOwnerToken(ownertoken string) ([]pet.Pet, response.Status)
 	GetPetByToken(token string) (interface{}, response.Status)
 	UpdatePet(token string, p pet.Pet) response.Status
 	DeletePet(token string) response.Status
 }
 
-func (ph *PetsHandler) CreatePet(p *pet.Pet, ownerToken string) response.Status {
+func (ph *PetsHandler) CreatePet(p *pet.Pet, ownerToken string) (interface{}, response.Status) {
 	token, _ := uuid.NewV4()
 	p.Token = token.String()
 
 	p.Ownertoken = ownerToken
-	return ph.Repository.CreatePet(p, ownerToken)
+	status := ph.Repository.CreatePet(p, ownerToken)
+	if status != response.SuccesfulCreation {
+		return nil, status
+	}
+
+	return p, response.SuccesfulCreation
 }
 
 func (ph *PetsHandler) GetPetsByOwnerToken(ownerToken string) ([]pet.Pet, response.Status) {

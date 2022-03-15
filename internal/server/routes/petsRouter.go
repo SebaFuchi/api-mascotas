@@ -32,8 +32,8 @@ func (pr *PetsRouter) CreatePet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	status := pr.Handler.CreatePet(&p, token)
-	resp, err := responseHelper.ResponseBuilder(status.Index(), status.String(), p)
+	resP, status := pr.Handler.CreatePet(&p, token)
+	resp, err := responseHelper.ResponseBuilder(status.Index(), status.String(), resP)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("500: Internal server error"))
@@ -42,6 +42,10 @@ func (pr *PetsRouter) CreatePet(w http.ResponseWriter, r *http.Request) {
 	switch status {
 	case response.SuccesfulCreation:
 		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte(resp))
+		return
+	case response.AlreadyExists:
+		w.WriteHeader(http.StatusForbidden)
 		w.Write([]byte(resp))
 		return
 	case response.CreationFailure:
