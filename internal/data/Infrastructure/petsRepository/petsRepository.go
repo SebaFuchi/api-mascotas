@@ -49,7 +49,7 @@ func (pr *PetsRepository) CreatePet(p *pet.Pet, ownerToken string) response.Stat
 
 	result, err := insForm.Exec(
 		p.Token,
-		p.Ownertoken,
+		p.OwnerToken,
 		p.Name,
 		p.Type,
 		p.Sex,
@@ -94,7 +94,7 @@ func (pr *PetsRepository) GetPetsByOwnerToken(ownertoken string) ([]pet.Pet, res
 		var p pet.Pet
 		err = rows.Scan(
 			&p.Token,
-			&p.Ownertoken,
+			&p.OwnerToken,
 			&p.Name,
 			&p.Type,
 			&p.Sex,
@@ -132,7 +132,7 @@ func (pr *PetsRepository) GetPetByToken(token string) (interface{}, response.Sta
 	if result.Next() {
 		err = result.Scan(
 			&p.Token,
-			&p.Ownertoken,
+			&p.OwnerToken,
 			&p.Name,
 			&p.Type,
 			&p.Sex,
