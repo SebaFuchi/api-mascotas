@@ -24,7 +24,7 @@ func (ph *PetsHandler) CreatePet(p *pet.Pet, ownerToken string) (interface{}, re
 	token, _ := uuid.NewV4()
 	p.Token = token.String()
 
-	p.Ownertoken = ownerToken
+	p.OwnerToken = ownerToken
 	status := ph.Repository.CreatePet(p, ownerToken)
 	if status != response.SuccesfulCreation {
 		return nil, status
